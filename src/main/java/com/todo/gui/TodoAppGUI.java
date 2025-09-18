@@ -3,7 +3,7 @@ import com.todo.model.Todo;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import com.todo.dao.TodoAppDAO;
-import java.awt.*;
+import java.awt.*; 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -27,6 +27,7 @@ public class TodoAppGUI extends JFrame {
         initializeComponents();
         setupLayout();
         loadTodos();
+        setupEventListeners();
     }
 
     private void initializeComponents(){
@@ -129,7 +130,20 @@ public class TodoAppGUI extends JFrame {
     }
 
     private void addTodo(){
-        
+        String title=titleField.getText().trim();
+        String description=descriptionArea.getText().trim();
+        Boolean completed=completedCheckbox.isSelected();
+        try{
+            Todo todo=new Todo(title,description);
+            todo.setCompleted(completed);
+            todoDAO.createtodo(todo);
+            JOptionPane.showMessageDialog(this,  "Todo added Succesfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            loadTodos();
+        }
+        catch(SQLException e){
+            JOptionPane.showMessageDialog(this,"Error adding Todo", "Failure",JOptionPane.ERROR_MESSAGE);
+            
+        }
     }
 
     private void deleteTodo(){
