@@ -92,9 +92,6 @@ public class TodoAppDAO {
         }
     }
 
-
-
-
     private Todo getTodoRow(ResultSet rs) throws SQLException{
         int id = rs.getInt("id");
         String title= rs.getString("title");
@@ -125,5 +122,19 @@ public class TodoAppDAO {
         }
         return todos;
     }
-
+    public List<Todo> filterTodos(boolean selected) throws SQLException 
+    {
+        List<Todo> todos = new ArrayList<>();
+        try ( 
+            Connection conn = DatabaseConnection.getDBConnection();
+            PreparedStatement stmt = conn.prepareStatement(FILTER_TODO)
+        ){
+            stmt.setBoolean(1, selected);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    todos.add(getTodoRow(rs));
+                }
+            }  
+    return todos;
+    } }
 }
